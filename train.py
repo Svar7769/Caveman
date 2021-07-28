@@ -13,10 +13,10 @@ import tensorflow as tp
 import os
 
 #use GPU
-from matplotlib import image as mpimg
-
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+base_dir = "data/train"
 sz = 128
+
 # Building the CNN
 
 # Initializing the CNN
@@ -43,7 +43,7 @@ classifier.add(Dense(units=96, activation='relu'))
 classifier.add(Dropout(0.40))
 classifier.add(Dense(units=64, activation='relu'))
 # Softmax to classify more than 2
-classifier.add(Dense(units=27, activation='softmax'))
+classifier.add(Dense(units=35, activation='softmax'))
 
 # Compiling the CNN
 # categorical_crossentropy for more than 2
@@ -58,35 +58,52 @@ train_datagen = ImageDataGenerator(
         rescale=1./255,
         shear_range=0.2,
         zoom_range=0.2,
-        horizontal_flip=True)
-test_datagen = ImageDataGenerator(rescale=1./255)
+        horizontal_flip=True,
+        validation_split=0.1
+)
+test_datagen = ImageDataGenerator(rescale=1./255,
+                                  validation_split=0.1
+)
 
-train_generator = train_datagen.flow_from_directory(
-        'data/test',
+train_datagen = train_datagen.flow_from_directory(
+        base_dir,
         target_size=(sz, sz),
         batch_size=10,
+        subset='training',
         color_mode='grayscale',
-        class_mode='categorical')
-validation_generator = test_datagen.flow_from_directory(
-        'data/test',
+        class_mode='categorical'
+)
+test_datagen = test_datagen.flow_from_directory(
+        base_dir,
         target_size=(sz, sz),
         batch_size=10,
+        subset='validation',
         color_mode='grayscale',
         class_mode='categorical')
 
-classifier.fit(
-        train_generator,
-        steps_per_epoch=30,
-        epochs=5,
-        validation_data=validation_generator,
-        validation_steps=800)
+history = classifier.fit(
+        train_datagen,
+        steps_per_epoch=int(3077/10),
+        epochs=40,
+        validation_data=test_datagen,
+        validation_steps=int(329/10)
+)
 
-# classifier.fit(
-#     training_set,
-#     steps_per_epoch=30,  # No of images in training set
-#     epochs=5,
-#     validation_data=test_set,
-#     validation_steps=2524)  # No of images in test set
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.title('model accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
+# summarize history for loss
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('model loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
 
 # Saving the model
 #model detain in jason file

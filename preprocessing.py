@@ -27,10 +27,11 @@ for (dirpath, dirnames, filenames) in os.walk(path):
         for (direcpath, direcnames, files) in os.walk(path + "/" + dirname):
             if not os.path.exists(path1 + "/train/" + dirname):
                 os.makedirs(path1 + "/train/" + dirname)
-            if not os.path.exists(path1 + "/test/" + dirname):
-                os.makedirs(path1 + "/test/" + dirname)
+            # if not os.path.exists(path1 + "/test/" + dirname):
+            #     os.makedirs(path1 + "/test/" + dirname)
             # sepration between test and train
-            num = 0.75 * len(files)
+            # num = 0.75 * len(files)
+            num = 1000000000
 
             i = 0
             for file in files:
