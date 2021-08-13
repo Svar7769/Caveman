@@ -38,9 +38,9 @@ classifier.add(Flatten())
 
 # Adding a fully connected layer
 classifier.add(Dense(units=128, activation='relu'))
-classifier.add(Dropout(0.40))
+classifier.add(Dropout(0.10))
 classifier.add(Dense(units=96, activation='relu'))
-classifier.add(Dropout(0.40))
+classifier.add(Dropout(0.10))
 classifier.add(Dense(units=64, activation='relu'))
 # Softmax to classify more than 2
 classifier.add(Dense(units=35, activation='softmax'))
@@ -108,8 +108,11 @@ plt.show()
 # Saving the model
 #model detain in jason file
 model_json = classifier.to_json()
-with open("model-bw.json", "w") as json_file:
+with open("model.json", "w") as json_file:
     json_file.write(model_json)
 print('Model Saved')
-classifier.save_weights('model-bw.h5')
+classifier.save_weights('model.h5')
 print('Weights saved')
+
+pre = classifier.predict('images/8/0.jpg')
+print(pre)

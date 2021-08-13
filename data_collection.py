@@ -1,5 +1,4 @@
 import cv2
-import numpy as np
 import os
 import string
 
@@ -105,6 +104,7 @@ while True:
     cv2.putText(frame, "y : " + str(count['y']), (10, 400), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 255), 1)
     cv2.putText(frame, "z : " + str(count['z']), (10, 410), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 255), 1)
 
+
     # Coordinates of the ROI
     x1 = int(0.5 * frame.shape[1])
     y1 = 10
@@ -113,7 +113,6 @@ while True:
 
     # Drawing the ROI
     cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), 1)
-
     # Extracting the ROI
     roi = frame[y1:x1, y2:x2].copy()
 
@@ -130,7 +129,7 @@ while True:
     test_image = cv2.resize(test_image, (300, 300))
     cv2.imshow("test", test_image)
 
-    interrupt = cv2.waitKey(10)
+    interrupt = cv2.waitKey(1)
 
     # capturing images
     if interrupt & 0xFF == 27:  # esc key
